@@ -1,4 +1,4 @@
-package core
+package main
 
 import "encoding/xml"
 
@@ -11,6 +11,15 @@ type Relationships struct {
 	partName     string
 	XMLName      xml.Name `xml:"Relationships"`
 	Relationship []*Relationship
+}
+
+func (r *Relationships) GetByID(ID string) (rl *Relationship, ok bool) {
+	for _, rl := range r.Relationship {
+		if rl.ID == ID {
+			return rl, true
+		}
+	}
+	return nil, false
 }
 
 func NewRelationships(partName string, xlsx *Xlsx) (r *Relationships, err error) {

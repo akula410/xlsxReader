@@ -1,11 +1,13 @@
-package core
+package main
 
 import (
 	"encoding/xml"
 	"errors"
+	"strings"
 )
 
 type Workbook struct {
+	Xlsx        *Xlsx
 	XMLName     xml.Name    `xml:"workbook"`
 	FileVersion FileVersion `xml:"fileVersion"`
 	WorkbookPr  WorkbookPr  `xml:"workbookPr"`
@@ -31,9 +33,19 @@ type WbSheet struct {
 func NewWoorkbook(xlsx *Xlsx) (wb *Workbook, err error) {
 
 	wb = &Workbook{}
+	wb.Xlsx = xlsx
+	var fName string
 
 	if partName, ok := xlsx.ContentTypes.GetPartNameByType(WorkbookContentType); ok {
-		f, err := xlsx.Files[partName[0]].Open()
+
+		for k, f := range xlsx.Files {
+			if strings.ToLower(f.Name) == strings.ToLower(partName[0]) {
+				fName = k
+				break
+			}
+		}
+
+		f, err := xlsx.Files[fName].Open()
 
 		if err != nil {
 			return nil, err
@@ -52,6 +64,6 @@ func NewWoorkbook(xlsx *Xlsx) (wb *Workbook, err error) {
 		return wb, err
 	}
 
-	return nil, errors.New("Woorkbook not found")
+	return nil, errors.New("workbook not found")
 
 }

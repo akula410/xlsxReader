@@ -1,11 +1,11 @@
-package core
+package main
 
 import (
 	"archive/zip"
 	"errors"
 )
 
-func openFile(path string) (xlsx *Xlsx, err error) {
+func OpenFile(path string) (xlsx *Xlsx, err error) {
 
 	zipReader, err := zip.OpenReader(path)
 
