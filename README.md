@@ -9,18 +9,18 @@
 ## Использование / Using
 
 ```go
-    xlsx, err := OpenFile("file.xlsx")
+xlsx, err := OpenFile("file.xlsx")
 
-	if err != nil {
-		t.Fatal(err)
-	}
+if err != nil {
+    panic(err)
+}
 
-	for _, ws := range xlsx.Worksheets {
-		for _, row := range ws.SheetData {
-			for _, cell := range row.GetCols() {
-				fmt.Println(cell.GetString())
-			}			
-		}
+for _, ws := range xlsx.Worksheets {
+	for _, row := range ws.SheetData {
+		for _, cell := range row.GetCols() {
+			fmt.Println(cell.GetString())
+		}			
 	}
+}
 ```
  
