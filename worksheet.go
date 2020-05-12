@@ -29,24 +29,35 @@ type CellVale struct {
 	Value string `xml:",chardata"`
 }
 
+type InlineStringValue struct {
+	Value string `xml:",chardata"`
+}
+
+type InlineString struct {
+	T InlineStringValue `xml:"t"`
+}
 type Col struct {
 	Row *Row
 	R   string       `xml:"r,attr"`
 	S   int          `xml:"s,attr"`
 	T   string       `xml:"t,attr"`
+	IS  InlineString `xml:"is"`
 	V   CellVale     `xml:"v"`
 	F   CellFunction `xml:"f"`
 }
 
 func (c *Col) GetString() string {
- if c.T == "s" {
+	if c.T == "s" {
 		idx, _ := strconv.Atoi(c.V.Value)
 
-		if idx>len(c.Row.Worksheet.Workbook.Xlsx.SST.SSTitems){
+		if idx > len(c.Row.Worksheet.Workbook.Xlsx.SST.SSTitems) {
 			fmt.Println("out of range SST")
 		}
 
 		return c.Row.Worksheet.Workbook.Xlsx.SST.SSTitems[idx].GetString()
+	}
+	if c.T == "inlineStr" {
+		return c.IS.T.Value
 	}
 
 	return c.V.Value
@@ -57,7 +68,7 @@ func (rw *Row) GetCols() (cols []*Col) {
 	var maxColKey int
 
 	for _, c := range rw.Cols {
-		colStr := c.R[:len(c.R)-len(strconv.Itoa(rw.RowID)) ]
+		colStr := c.R[:len(c.R)-len(strconv.Itoa(rw.RowID))]
 		if colNum, err := ColumnStrIdxToNumIdx(colStr); err == nil {
 			if colNum > maxColKey {
 				maxColKey = colNum
@@ -72,7 +83,7 @@ func (rw *Row) GetCols() (cols []*Col) {
 		} else {
 			cols = append(cols, &Col{
 				Row: rw,
-				R:   fmt.Sprintf("%s%d",ColumnNumIdxToStrIdx(i),rw.RowID),
+				R:   fmt.Sprintf("%s%d", ColumnNumIdxToStrIdx(i), rw.RowID),
 				S:   0,
 				T:   "",
 				V:   CellVale{},
@@ -114,7 +125,7 @@ func NewWorksheet(partName string, wbSheet *WbSheet, xlsx *Xlsx) (ws *Worksheet,
 
 		for r, cell := range row.Cols {
 			row.Cols[r].Row = &ws.SheetData[k]
-			colStr := cell.R[:len(cell.R)-len(strconv.Itoa(row.RowID)) ]
+			colStr := cell.R[:len(cell.R)-len(strconv.Itoa(row.RowID))]
 			if colNum, err := ColumnStrIdxToNumIdx(colStr); err == nil {
 				cell.Row.Worksheet = ws
 				ws.CellMap[row.RowID][colNum] = cell
