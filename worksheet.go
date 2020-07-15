@@ -4,6 +4,7 @@ import (
 	"encoding/xml"
 	"fmt"
 	"strconv"
+	"strings"
 )
 
 type Worksheet struct {
@@ -48,7 +49,7 @@ type Col struct {
 
 func (c *Col) GetString() string {
 	if c.T == "s" {
-		idx, _ := strconv.Atoi(c.V.Value)
+		idx, _ := strconv.Atoi(strings.TrimSpace(c.V.Value))
 
 		if idx > len(c.Row.Worksheet.Workbook.Xlsx.SST.SSTitems) {
 			fmt.Println("out of range SST")
