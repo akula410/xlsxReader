@@ -1,3 +1,3 @@
 module github.com/akula410/xlsxReader
 
-go 1.13
+go 1.14
