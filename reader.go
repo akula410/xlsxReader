@@ -33,3 +33,19 @@ func OpenFile(path string) (xlsx *Xlsx, err error) {
 	return
 
 }
+
+func ReadFile(files []*zip.File) (xlsx *Xlsx, err error) {
+
+	xlsx = new(Xlsx)
+
+	xlsx.Files = make(map[string]*zip.File, len(files))
+
+	for _, file := range files {
+		xlsx.Files[file.Name]=new(zip.File)
+		xlsx.Files[file.Name]=file
+	}
+
+	err = xlsx.readRootRels()
+
+	return
+}
