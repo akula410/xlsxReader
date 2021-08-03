@@ -1,3 +1,3 @@
-module github.com/shakinm/xlsxReader
+module github.com/akula410/xlsxReader
 
 go 1.13

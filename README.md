@@ -4,7 +4,7 @@
 
 ## Установка / Installation
 
-`$ go get github.com/shakinm/xlsxReader`
+`$ go get github.com/akula410/xlsxReader`
 
 ## Использование / Using
 
